@@ -27,13 +27,13 @@ window.onload = function() {
 
 		"Orange metal": new THREE.MeshLambertMaterial({ color: 0xff6600, envMap: textureCube, combine: THREE.MultiplyOperation }),
 		"Blue metal": new THREE.MeshLambertMaterial({ color: 0x2894d3, envMap: textureCube, combine: THREE.MultiplyOperation }),
-		"DBlue_metal": new THREE.MeshLambertMaterial({ color: 0x608bd1, envMap: textureCube, combine: THREE.MultiplyOperation }),
+		"DBlue_metal": new THREE.MeshLambertMaterial({ color: 0xf28100, envMap: textureCube, combine: THREE.MultiplyOperation }),
 		"DOrange_metal": new THREE.MeshLambertMaterial({ color: 0xf48c42, envMap: textureCube, combine: THREE.MultiplyOperation }),
 		
 		"LBlue_metal": new THREE.MeshPhongMaterial({ color: 0x150505, specular: 0x008aee, shininess: 10, envMap: textureCube, combine: THREE.MixOperation, reflectivity: 0.25 }),
 		"Red metal": new THREE.MeshLambertMaterial({ color: 0x770000, envMap: textureCube, combine: THREE.MultiplyOperation }),
 		"Green metal": new THREE.MeshLambertMaterial({ color: 0x00ff26, envMap: textureCube, combine: THREE.MultiplyOperation }),
-		"Black metal": new THREE.MeshLambertMaterial({ color: 0x222222, envMap: textureCube, combine: THREE.MultiplyOperation }),
+		"Black metal": new THREE.MeshLambertMaterial({ color: 0x060606, envMap: textureCube, combine: THREE.MultiplyOperation }),
 
 		"Pure chrome": new THREE.MeshLambertMaterial({ color: 0xffffff, envMap: textureCube }),
 		"Dark chrome": new THREE.MeshLambertMaterial({ color: 0x444444, envMap: textureCube }),
@@ -58,17 +58,19 @@ window.onload = function() {
 
 		"Darkgray shiny": new THREE.MeshPhongMaterial({ color: 0x000000, specular: 0x050505 }),
 		"Gray shiny": new THREE.MeshPhongMaterial({ color: 0x050505, shininess: 20 }),
-		"Black wheel": new THREE.MeshStandardMaterial({ color: 0x090909, metalness: 1, roughness: 1})
+		"Black wheel": new THREE.MeshStandardMaterial({ color: 0x090909, metalness: 1, roughness: 1}),
+		"UBlack": new THREE.MeshStandardMaterial({ color: 0x500000, metalness: 1, roughness: 0.2,envMap: textureCube}),
+		"URed": new THREE.MeshStandardMaterial({ color: 0x040000, metalness: 1, roughness: 0.2,envMap: textureCube})
 	};
-	let frameMaterial = materials['Pure chrome'],
-		bodyMaterial = materials['DOrange_metal'],
+	let frameMaterial = materials['Chrome'],
+		bodyMaterial = materials['UBlack'],
 		wheelsMaterial = materials['Black wheel'],
-		sideMaterial = materials['Black metal'],
-		exhaustPipesMaterial = materials['Pure chrome'],
+		sideMaterial = materials['URed'],
+		exhaustPipesMaterial = materials['Chrome'],
 		backLightsMaterial1 = materials['Red glass'],
 		backLightsMaterial2 = materials['Red'],
-		frontBumperMaterial = materials['Black metal'],
-		backBumperMaterial = materials['Black metal'];
+		frontBumperMaterial = materials['URed'],
+		backBumperMaterial = materials['URed'];
 	function initScene() {
 		camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.1, 10000);
 		renderer = new THREE.WebGLRenderer({ antialias: true, canvas: canvas }); // antialias - сглаживаем ребра
@@ -85,8 +87,8 @@ window.onload = function() {
 		renderer.setClearColor(0xa6f3fc);
 
 		textureCube = new THREE.CubeTextureLoader()
-			.setPath('./cube/Bridge2/')
-			.load(['posx.jpg', 'negx.jpg', 'posy.jpg', 'negy.jpg', 'posz.jpg', 'negz.jpg']);
+			.setPath('./cube/snow_dust/')
+			.load(['sleepyhollow_ft.jpg', 'sleepyhollow_bk.jpg', 'sleepyhollow_up.jpg', 'sleepyhollow_dn.jpg', 'sleepyhollow_rt.jpg', 'sleepyhollow_lf.jpg']);
 		scene.background = textureCube;
 	}
 
