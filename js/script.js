@@ -10,6 +10,7 @@ window.onload = function() {
 	generateCar();
 	let materials = {
 		"Orange": new THREE.MeshLambertMaterial({ color: 0xff6600, envMap: textureCube, combine: THREE.MixOperation, reflectivity: 0.3 }),
+		"Yellow": new THREE.MeshLambertMaterial({ color: 0xffc700, envMap: textureCube, combine: THREE.MixOperation, reflectivity: 0.3 }),
 		"Blue": new THREE.MeshLambertMaterial({ color: 0x001133, envMap: textureCube, combine: THREE.MixOperation, reflectivity: 0.3 }),
 		"Red": new THREE.MeshLambertMaterial({ color: 0x660000, envMap: textureCube, combine: THREE.MixOperation, reflectivity: 0.25 }),
 		"Black": new THREE.MeshLambertMaterial({ color: 0x000000, envMap: textureCube, combine: THREE.MixOperation, reflectivity: 0.15 }),
@@ -26,6 +27,9 @@ window.onload = function() {
 
 		"Orange metal": new THREE.MeshLambertMaterial({ color: 0xff6600, envMap: textureCube, combine: THREE.MultiplyOperation }),
 		"Blue metal": new THREE.MeshLambertMaterial({ color: 0x2894d3, envMap: textureCube, combine: THREE.MultiplyOperation }),
+		"DBlue_metal": new THREE.MeshLambertMaterial({ color: 0x608bd1, envMap: textureCube, combine: THREE.MultiplyOperation }),
+		"DOrange_metal": new THREE.MeshLambertMaterial({ color: 0xf48c42, envMap: textureCube, combine: THREE.MultiplyOperation }),
+		
 		"LBlue_metal": new THREE.MeshPhongMaterial({ color: 0x150505, specular: 0x008aee, shininess: 10, envMap: textureCube, combine: THREE.MixOperation, reflectivity: 0.25 }),
 		"Red metal": new THREE.MeshLambertMaterial({ color: 0x770000, envMap: textureCube, combine: THREE.MultiplyOperation }),
 		"Green metal": new THREE.MeshLambertMaterial({ color: 0x00ff26, envMap: textureCube, combine: THREE.MultiplyOperation }),
@@ -53,10 +57,18 @@ window.onload = function() {
 		"Red rough": new THREE.MeshLambertMaterial({ color: 0x330500 }),
 
 		"Darkgray shiny": new THREE.MeshPhongMaterial({ color: 0x000000, specular: 0x050505 }),
-		"Gray shiny": new THREE.MeshPhongMaterial({ color: 0x050505, shininess: 20 })
+		"Gray shiny": new THREE.MeshPhongMaterial({ color: 0x050505, shininess: 20 }),
+		"Black wheel": new THREE.MeshStandardMaterial({ color: 0x090909, metalness: 1, roughness: 1})
 	};
-	let frameMaterial = materials['Pure chrome'];
-	let bodyMaterial = materials['LBlue_metal'];
+	let frameMaterial = materials['Pure chrome'],
+		bodyMaterial = materials['DOrange_metal'],
+		wheelsMaterial = materials['Black wheel'],
+		sideMaterial = materials['Black metal'],
+		exhaustPipesMaterial = materials['Pure chrome'],
+		backLightsMaterial1 = materials['Red glass'],
+		backLightsMaterial2 = materials['Red'],
+		frontBumperMaterial = materials['Black metal'],
+		backBumperMaterial = materials['Black metal'];
 	function initScene() {
 		camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.1, 10000);
 		renderer = new THREE.WebGLRenderer({ antialias: true, canvas: canvas }); // antialias - сглаживаем ребра
@@ -123,7 +135,7 @@ window.onload = function() {
 			let carGroup = new THREE.Group();
 			meshes.forEach(function(item, index) {
 				let carMesh = item;
-				carMesh.material = new THREE.MeshLambertMaterial({ color: 0x101046, opacity: 0.5,
+				carMesh.material = new THREE.MeshLambertMaterial({ color: 0x101046, opacity: 1,
 				  transparent: true,
 				   // side: THREE.DoubleSide
 				});
@@ -157,114 +169,70 @@ window.onload = function() {
 			// carGroup.children[155].material = materials['Red'];
 			// carGroup.children[156].material = materials['White'];
 			// //standart
-			// carGroup.children[1].material = bodyMaterial;
-			// carGroup.children[2].material = bodyMaterial;
-			// carGroup.children[6].material = bodyMaterial;
-			// carGroup.children[7].material = bodyMaterial;
-			// carGroup.children[8].material = bodyMaterial;
-			// carGroup.children[9].material = bodyMaterial;
-			// carGroup.children[10].material = bodyMaterial;
-			// carGroup.children[11].material = bodyMaterial;
-			// carGroup.children[12].material = bodyMaterial;
-			// carGroup.children[13].material = bodyMaterial;
-			// carGroup.children[14].material = bodyMaterial;
-			// carGroup.children[15].material = bodyMaterial;
-			// carGroup.children[16].material = bodyMaterial;
-			// carGroup.children[17].material = bodyMaterial;
-			// carGroup.children[18].material = bodyMaterial;
-			// carGroup.children[19].material = bodyMaterial;
-			// carGroup.children[20].material = materials['LBlue_metal'];
-			// carGroup.children[22].material = materials['LBlue_metal'];
-			// carGroup.children[23].material = materials['LBlue_metal'];
-			// carGroup.children[24].material = materials['LBlue_metal'];
-			// carGroup.children[35].material = materials['LBlue_metal'];
-			// carGroup.children[36].material = materials['LBlue_metal'];
-			// carGroup.children[40].material = materials['LBlue_metal'];
-			// carGroup.children[41].material = materials['LBlue_metal'];
-			// carGroup.children[44].material = materials['LBlue_metal'];
-			// carGroup.children[45].material = materials['LBlue_metal'];
-			// carGroup.children[46].material = materials['LBlue_metal'];
-			// carGroup.children[47].material = materials['LBlue_metal'];
-			// carGroup.children[48].material = materials['LBlue_metal'];
-			// carGroup.children[49].material = materials['LBlue_metal'];
-			// carGroup.children[50].material = materials['LBlue_metal'];
-			// carGroup.children[51].material = materials['LBlue_metal'];
-			// carGroup.children[52].material = materials['LBlue_metal'];
-			// carGroup.children[53].material = materials['LBlue_metal'];
-			// carGroup.children[54].material = materials['LBlue_metal'];
-			// carGroup.children[55].material = materials['LBlue_metal'];
-			// carGroup.children[56].material = materials['LBlue_metal'];
-			// carGroup.children[57].material = materials['LBlue_metal'];
-			// carGroup.children[58].material = materials['LBlue_metal'];
-			// carGroup.children[63].material = materials['LBlue_metal'];
-			// carGroup.children[66].material = materials['LBlue_metal'];
-			// carGroup.children[67].material = materials['LBlue_metal'];
-			// carGroup.children[68].material = materials['LBlue_metal'];
-			// carGroup.children[69].material = materials['LBlue_metal'];
-			// carGroup.children[70].material = materials['LBlue_metal'];
-			// carGroup.children[71].material = materials['LBlue_metal'];
-			// carGroup.children[72].material = materials['LBlue_metal'];
-			// carGroup.children[73].material = materials['LBlue_metal'];
-			// carGroup.children[74].material = materials['LBlue_metal'];
-			// carGroup.children[75].material = materials['LBlue_metal'];
-			// carGroup.children[76].material = materials['LBlue_metal'];
-			// carGroup.children[92].material = materials['LBlue_metal'];
-			// carGroup.children[93].material = materials['LBlue_metal'];
-			// carGroup.children[94].material = materials['LBlue_metal'];
-			// carGroup.children[95].material = materials['LBlue_metal'];
-			// carGroup.children[109].material = materials['LBlue_metal'];
-			// carGroup.children[113].material = materials['LBlue_metal'];
-			// carGroup.children[114].material = materials['LBlue_metal'];
-			// carGroup.children[115].material = materials['LBlue_metal'];
-			// carGroup.children[120].material = materials['LBlue_metal'];
-			// carGroup.children[122].material = materials['LBlue_metal'];
-			// carGroup.children[123].material = materials['LBlue_metal'];
-			// carGroup.children[124].material = materials['LBlue_metal'];
-			// carGroup.children[130].material = materials['LBlue_metal'];
-			// carGroup.children[132].material = materials['LBlue_metal'];
-			// carGroup.children[133].material = materials['LBlue_metal'];
-			// carGroup.children[134].material = materials['LBlue_metal'];
-			// carGroup.children[135].material = materials['LBlue_metal'];
-			// carGroup.children[136].material = materials['LBlue_metal'];
-			// carGroup.children[137].material = materials['LBlue_metal'];
-			// carGroup.children[138].material = materials['LBlue_metal'];
-			// carGroup.children[139].material = materials['LBlue_metal'];
-			// carGroup.children[140].material = materials['LBlue_metal'];
-			// carGroup.children[141].material = materials['LBlue_metal'];
-			// carGroup.children[142].material = materials['LBlue_metal'];
-			// carGroup.children[145].material = materials['LBlue_metal'];
-			// carGroup.children[150].material = materials['LBlue_metal'];
-			// carGroup.children[159].material = materials['LBlue_metal'];
-			// carGroup.children[160].material = materials['LBlue_metal'];
-			// carGroup.children[162].material = materials['LBlue_metal'];
-			// carGroup.children[164].material = materials['LBlue_metal'];
-			// carGroup.children[165].material = materials['LBlue_metal'];
-			// carGroup.children[167].material = materials['LBlue_metal'];
-			// carGroup.children[168].material = materials['LBlue_metal'];
-			// carGroup.children[169].material = materials['LBlue_metal'];
-			// carGroup.children[170].material = materials['LBlue_metal'];
-			// carGroup.children[171].material = materials['LBlue_metal'];
-			// carGroup.children[172].material = materials['LBlue_metal'];
-			// carGroup.children[223].material = materials['White'];
-			// carGroup.children[224].material = materials['Green'];
-			// carGroup.children[234].material = materials['Red'];
-			// carGroup.children[235].material = materials['White'];
-			// carGroup.children[236].material = materials['Green'];
-			// carGroup.children[246].material = materials['Red'];
-			
-			// rear windows
-			// carGroup.children[5].material = bodyMaterial;
-			// carGroup.children[21].material = bodyMaterial;
-			// carGroup.children[65].material = bodyMaterial;
-			// carGroup.children[70].material = bodyMaterial;
-			// carGroup.children[106].material = bodyMaterial;
-			// carGroup.children[125].material = bodyMaterial;
-			// carGroup.children[127].material = bodyMaterial;
-			// carGroup.children[163].material = bodyMaterial;
+
+			let bodyArrayMaterial = [1,2,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,22,23,24,35,36,40,41,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,63,66,67,68,69,70,71,72,73,74,75,76,92,93,94,95,109,113,114,115,120,122,123,124,130,132,133,134,135,136,137,138,139,140,141,142,145,150,159,160,162,164,165,167,168,169,170,171,172,223,224,234,235,236,246],
+				rearWindowsMaterial = [5,21,65,70,106,125,127,163],
+				spoilerMaterial = [294,299,298],
+				wheelsParts = [302,303,304,305],
+				sideParts = [119,129],
+				backExhaustPipesArrayMaterial = [300,351,352,353,354,355,356,357,358,359],
+				frameArrayMaterial = [84,85,96,97],
+				innerFramesArrayMaterials = [301,311,372],
+				backLightsMainMaterils = [201,215,217],
+				backLightsDetalizationMaterils = [222,293],
+				mainHeavyFrame = [312],
+				frontBumberArrayMaterial = [111, 116],
+				backBumberArrayMaterial = [118,128];
+
+			bodyArrayMaterial.forEach(function(item) {
+				carGroup.children[item].material = bodyMaterial;
+			});
+			rearWindowsMaterial.forEach(function(item) {
+				carGroup.children[item].material = bodyMaterial;
+			});
+			spoilerMaterial.forEach(function(item) {
+				carGroup.children[item].material.opacity = 0;
+			});
+			wheelsParts.forEach(function(item) {
+				carGroup.children[item].material = wheelsMaterial;
+			});
+			sideParts.forEach(function(item) {
+				carGroup.children[item].material = sideMaterial;
+			});
+			backExhaustPipesArrayMaterial.forEach(function(item) {
+				carGroup.children[item].material = exhaustPipesMaterial;
+			});
+			frameArrayMaterial.forEach(function(item) {
+				carGroup.children[item].material = exhaustPipesMaterial;
+			});
+			innerFramesArrayMaterials.forEach(function(item) {
+				carGroup.children[item].material = exhaustPipesMaterial;
+			});
+			backLightsMainMaterils.forEach(function(item) {
+				carGroup.children[item].material = backLightsMaterial1;
+			});
+			backLightsDetalizationMaterils.forEach(function(item) {
+				carGroup.children[item].material = backLightsMaterial2;
+			});
+			mainHeavyFrame.forEach(function(item) {
+				carGroup.children[item].material = exhaustPipesMaterial;
+			});
+			frontBumberArrayMaterial.forEach(function(item) {
+				carGroup.children[item].material = frontBumperMaterial;
+			});
+			backBumberArrayMaterial.forEach(function(item) {
+				carGroup.children[item].material = backBumperMaterial;
+			});
+
+			// Lamborgini logo
+			carGroup.children[154].material = materials['Yellow'];
+			carGroup.children[157].material = materials['Red'];
+			// L logo
+			carGroup.children[166].material = materials['Black metal'];
+
 			//inner rear 
 			// carGroup.children[90].material = materials['White'];
 			// carGroup.children[91].material = materials['Green'];
-
 
 			// notches
 			// carGroup.children[31].material = materials['White'];
@@ -272,17 +240,6 @@ window.onload = function() {
 			// carGroup.children[33].material = materials['White'];
 			// carGroup.children[107].material = materials['Red'];
 			// carGroup.children[143].material = materials['Red'];
-			//front bamper
-			// carGroup.children[111].material = materials['White'];
-			// carGroup.children[116].material = materials['Red'];
-
-			// back side
-			// carGroup.children[118].material = materials['Green'];
-			// carGroup.children[128].material = materials['Red'];
-
-			// left side / right side
-			// carGroup.children[119].material = materials['Red'];
-			// carGroup.children[129].material = materials['White'];
 
 			// back window
 			// carGroup.children[110].material = materials['Red'];
@@ -320,12 +277,6 @@ window.onload = function() {
 			// carGroup.children[80].material = materials['LightBlue'];
 			// carGroup.children[82].material = materials['White'];
 
-			// Lamborgini logo
-			// carGroup.children[154].material = materials['Green'];
-			// carGroup.children[157].material = materials['Green'];
-			// L logo
-			// carGroup.children[166].material = materials['Green'];
-
 			// side light
 			// carGroup.children[198].material = materials['White'];
 			// carGroup.children[199].material = materials['Green'];
@@ -357,17 +308,8 @@ window.onload = function() {
 			// carGroup.children[369].material = materials['Red'];
 			// carGroup.children[373].material = materials['White'];
 
-			// back lights
-			// carGroup.children[201].material = materials['Red'];
-			// carGroup.children[215].material = materials['Green'];
-			// carGroup.children[217].material = materials['White'];
-
 			// back glass
 			// carGroup.children[407].material = materials['Red'];
-
-			// main back lights
-			// carGroup.children[222].material = materials['Red'];
-			// carGroup.children[293].material = materials['Green'];
 
 			// front lights
 			// carGroup.children[214].material = materials['White'];
@@ -461,8 +403,6 @@ window.onload = function() {
 			// carGroup.children[430].material = materials['Red'];
 			// carGroup.children[436].material = materials['Green'];
 
-			
-
 			// helm parts
 			// carGroup.children[424].material = materials['Green'];
 			// carGroup.children[424].material = materials['Red'];
@@ -477,6 +417,7 @@ window.onload = function() {
 			// carGroup.children[392].material = materials['Green'];
 			// carGroup.children[396].material = materials['Red'];
 			// carGroup.children[397].material = materials['White'];
+			// carGroup.children[317].material = materials['White'];
 			// helm main parts
 			// carGroup.children[393].material = materials['Red'];
 			// carGroup.children[394].material = materials['White'];
@@ -502,52 +443,12 @@ window.onload = function() {
 			// carGroup.children[388].material = materials['White'];
 			// carGroup.children[391].material = materials['White'];
 
-			// Spoiler
-			// carGroup.children[294].material = materials['Red'];
-			// carGroup.children[299].material = materials['Green'];
-
-			// bottom spoiler parts
-			// carGroup.children[298].material = materials['White'];
-
 			// back additional parts
 			// carGroup.children[296].material = materials['Green'];
 			// carGroup.children[297].material = materials['Red'];
 
 			// inner parts
 			// carGroup.children[295].material = materials['White'];
-
-			// frame
-			// carGroup.children[84].material = frameMaterial;
-			// carGroup.children[85].material = frameMaterial;
-			// carGroup.children[96].material = frameMaterial;
-			// carGroup.children[97].material = frameMaterial;
-
-			// inner frames 
-			// carGroup.children[301].material = materials['White'];
-			// carGroup.children[311].material = materials['Green'];
-			// carGroup.children[372].material = materials['Red'];
-
-			// back pipes
-			// carGroup.children[300].material = materials['Red'];
-			// carGroup.children[351].material = materials['Red'];
-			// carGroup.children[352].material = materials['White'];
-			// carGroup.children[353].material = materials['Green'];
-			// carGroup.children[354].material = materials['Red'];
-			// carGroup.children[355].material = materials['White'];
-			// carGroup.children[356].material = materials['Green'];
-			// carGroup.children[357].material = materials['Red'];
-			// carGroup.children[358].material = materials['White'];
-			// carGroup.children[359].material = materials['Green'];
-
-			// whell
-			// carGroup.children[302].material = materials['Green'];
-			// carGroup.children[303].material = materials['Red'];
-			// carGroup.children[304].material = materials['White'];
-			// carGroup.children[305].material = materials['Green'];
-			// carGroup.children[317].material = materials['Green'];
-
-			// bottom-heavy frames
-			// carGroup.children[312].material = materials['Red'];
 
 			// salon
 			// carGroup.children[313].material = materials['White'];
@@ -581,13 +482,11 @@ window.onload = function() {
 			// carGroup.children[386].material = materials['Green'];
 			// carGroup.children[389].material = materials['Green'];
 
-
 			// rearview mirror
 			// carGroup.children[325].material = materials['White'];
 
 			// 	top rearview mirror
 			// carGroup.children[326].material = materials['Green'];
-
 
 			// chassis
 			// carGroup.children[306].material = materials['Red'];
