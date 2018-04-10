@@ -3,11 +3,12 @@ window.onload = function() {
 	let canvas = document.getElementById('canvas'),
 		scene = new THREE.Scene();
 
-	let camera, renderer, light, controls, stats, textureCube;
+	let camera, renderer, light, controls, stats, textureCube, carGroup;
 	initScene();
 	addLights();
 	rendering();
 	generateCar();
+	createBackgroundScene();
 	let materials = {
 		"Orange": new THREE.MeshLambertMaterial({ color: 0xff6600, envMap: textureCube, combine: THREE.MixOperation, reflectivity: 0.3 }),
 		"Yellow": new THREE.MeshLambertMaterial({ color: 0xffc700, envMap: textureCube, combine: THREE.MixOperation, reflectivity: 0.3 }),
@@ -29,7 +30,7 @@ window.onload = function() {
 		"Blue metal": new THREE.MeshLambertMaterial({ color: 0x2894d3, envMap: textureCube, combine: THREE.MultiplyOperation }),
 		"DBlue_metal": new THREE.MeshLambertMaterial({ color: 0xf28100, envMap: textureCube, combine: THREE.MultiplyOperation }),
 		"DOrange_metal": new THREE.MeshLambertMaterial({ color: 0xf48c42, envMap: textureCube, combine: THREE.MultiplyOperation }),
-		
+
 		"LBlue_metal": new THREE.MeshPhongMaterial({ color: 0x150505, specular: 0x008aee, shininess: 10, envMap: textureCube, combine: THREE.MixOperation, reflectivity: 0.25 }),
 		"Red metal": new THREE.MeshLambertMaterial({ color: 0x770000, envMap: textureCube, combine: THREE.MultiplyOperation }),
 		"Green metal": new THREE.MeshLambertMaterial({ color: 0x00ff26, envMap: textureCube, combine: THREE.MultiplyOperation }),
@@ -58,9 +59,10 @@ window.onload = function() {
 
 		"Darkgray shiny": new THREE.MeshPhongMaterial({ color: 0x000000, specular: 0x050505 }),
 		"Gray shiny": new THREE.MeshPhongMaterial({ color: 0x050505, shininess: 20 }),
-		"Black wheel": new THREE.MeshStandardMaterial({ color: 0x090909, metalness: 1, roughness: 1}),
-		"UBlack": new THREE.MeshStandardMaterial({ color: 0x500000, metalness: 1, roughness: 0.2,envMap: textureCube}),
-		"URed": new THREE.MeshStandardMaterial({ color: 0x040000, metalness: 1, roughness: 0.2,envMap: textureCube})
+		"Black wheel": new THREE.MeshStandardMaterial({ color: 0x090909, metalness: 1, roughness: 1 }),
+		"UBlack": new THREE.MeshStandardMaterial({ color: 0x500000, metalness: 1, roughness: 0.2, envMap: textureCube }),
+		"URed": new THREE.MeshStandardMaterial({ color: 0x040000, metalness: 1, roughness: 0.2, envMap: textureCube }),
+		"Invisible": new THREE.MeshLambertMaterial({opacity: 0., transparent: true })
 	};
 	let frameMaterial = materials['Chrome'],
 		bodyMaterial = materials['UBlack'],
@@ -70,26 +72,26 @@ window.onload = function() {
 		backLightsMaterial1 = materials['Red glass'],
 		backLightsMaterial2 = materials['Red'],
 		frontBumperMaterial = materials['URed'],
-		backBumperMaterial = materials['URed'];
+		backBumperMaterial = materials['URed'],
+		Invisible = materials['Invisible'];
+
 	function initScene() {
 		camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.1, 10000);
 		renderer = new THREE.WebGLRenderer({ antialias: true, canvas: canvas }); // antialias - сглаживаем ребра
-		// camera.position.set(0, 615, 700);
-		camera.position.set(0, 0, 300);
-		camera.rotation.set(-0.72, 0, 0);
+		camera.position.set(200, 215, 200);
 		renderer.shadowMap.enabled = true;
 		renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-		renderer.setPixelRatio(window.devicePixelRatio > 1 ? 2 : 1);
+		// renderer.setPixelRatio(window.devicePixelRatio > 1 ? 2 : 1);
 		renderer.setSize(window.innerWidth, window.innerHeight);
 		renderer.gammaInput = renderer.gammaOutput = true;
 		renderer.toneMapping = THREE.LinearToneMapping;
 		// renderer.toneMappingExposure = 1;
-		renderer.setClearColor(0xa6f3fc);
 
 		textureCube = new THREE.CubeTextureLoader()
 			.setPath('./cube/snow_dust/')
 			.load(['sleepyhollow_ft.jpg', 'sleepyhollow_bk.jpg', 'sleepyhollow_up.jpg', 'sleepyhollow_dn.jpg', 'sleepyhollow_rt.jpg', 'sleepyhollow_lf.jpg']);
-		scene.background = textureCube;
+		// scene.background = textureCube;
+		// scene.background = 0x000000;
 	}
 
 	function resize() {
@@ -99,21 +101,44 @@ window.onload = function() {
 	}
 
 	function addLights() {
-		light;
-		let d = 900;
-		light = new THREE.DirectionalLight(0xdfebff, 1.1);
-		light.position.set(100, 500, -650);
-		light.position.multiplyScalar(1.3);
-		light.castShadow = true;
-		light.shadow.mapSize.width = 1024;
-		light.shadow.mapSize.height = 1024;
-		light.shadow.camera.left = -d;
-		light.shadow.camera.right = d;
-		light.shadow.camera.top = d;
-		light.shadow.camera.bottom = -d;
-		light.shadow.camera.far = 2000;
-		scene.add(new THREE.AmbientLight(0xffffff, 0.2));
-		scene.add(light);
+		let spotLight;
+		let d = 500;
+		spotLight = new THREE.SpotLight(0xffffff, 1, 800, 0.5, 0.9);
+		spotLight.position.set(0, 400, 0);
+		spotLight.castShadow = true;
+		spotLight.shadow.mapSize.width = 1024;
+		spotLight.shadow.mapSize.height = 1024;
+		spotLight.shadow.camera.near = 500;
+		spotLight.shadow.camera.far = 800;
+		// spotLight.shadow.camera.fov = 30;
+		// spotLight.shadow.camera.left = -d;
+		// spotLight.shadow.camera.right = d;
+		// spotLight.shadow.camera.top = d;
+		// spotLight.shadow.camera.bottom = -d;
+		// spotLight.shadow.camera.far = 1800;
+		// scene.add(new THREE.AmbientLight(0xffffff, 0.2));
+		// scene.add(new THREE.AmbientLight(0xffffff, 1));
+		scene.add(spotLight);
+		// let helper = new THREE.SpotLightHelper( spotLight, 5 );
+		// scene.add( helper )
+	}
+
+	function createBackgroundScene() {
+		let giftBump = new THREE.TextureLoader().load('images/plane.png');
+
+		let backgroundSceneGeometry = new THREE.PlaneGeometry(500, 500, 2),
+			backgroundSceneMaterial = new THREE.MeshStandardMaterial({
+				color: 0x999999,
+				side: THREE.DoubleSide,
+				// map:giftBump,
+				bumpMap: giftBump,
+				// overdraw: true  
+			}),
+			backgroundSceneMesh = new THREE.Mesh(backgroundSceneGeometry, backgroundSceneMaterial);
+		backgroundSceneMesh.rotateX((90 * Math.PI) / 180);
+		backgroundSceneMesh.castShadow = true;
+		backgroundSceneMesh.receiveShadow = true;
+		scene.add(backgroundSceneMesh);
 	}
 
 	function generateCar() {
@@ -134,13 +159,18 @@ window.onload = function() {
 			// console.log(carMesh)
 
 			//porshe
-			let carGroup = new THREE.Group();
+			carGroup = new THREE.Group();
 			meshes.forEach(function(item, index) {
 				let carMesh = item;
-				carMesh.material = new THREE.MeshLambertMaterial({ color: 0x101046, opacity: 1,
-				  transparent: true,
-				   // side: THREE.DoubleSide
+				carMesh.material = new THREE.MeshLambertMaterial({
+					color: 0x101046,
+					opacity: 1,
+					transparent: true,
+					// side: THREE.DoubleSide
 				});
+				carMesh.material = materials['Black metal'];
+				carMesh.castShadow = true;
+				carMesh.receiveShadow = true;
 				carGroup.add(carMesh);
 				// console.log(index)
 				// console.log(index);
@@ -172,19 +202,19 @@ window.onload = function() {
 			// carGroup.children[156].material = materials['White'];
 			// //standart
 
-			let bodyArrayMaterial = [1,2,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,22,23,24,35,36,40,41,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,63,66,67,68,69,70,71,72,73,74,75,76,92,93,94,95,109,113,114,115,120,122,123,124,130,132,133,134,135,136,137,138,139,140,141,142,145,150,159,160,162,164,165,167,168,169,170,171,172,223,224,234,235,236,246],
-				rearWindowsMaterial = [5,21,65,70,106,125,127,163],
-				spoilerMaterial = [294,299,298],
-				wheelsParts = [302,303,304,305],
-				sideParts = [119,129],
-				backExhaustPipesArrayMaterial = [300,351,352,353,354,355,356,357,358,359],
-				frameArrayMaterial = [84,85,96,97],
-				innerFramesArrayMaterials = [301,311,372],
-				backLightsMainMaterils = [201,215,217],
-				backLightsDetalizationMaterils = [222,293],
+			let bodyArrayMaterial = [1, 2, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 22, 23, 24, 35, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 63, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 92, 93, 94, 95, 109, 113, 114, 115, 120, 122, 123, 124, 130, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 145, 150, 159, 160, 162, 164, 165, 167, 168, 169, 170, 171, 172, 223, 224, 234, 235, 236, 246],
+				rearWindowsMaterial = [5, 21, 65, 70, 106, 125, 127, 163],
+				spoilerMaterial = [294, 299, 298],
+				wheelsParts = [302, 303, 304, 305],
+				sideParts = [119, 129],
+				backExhaustPipesArrayMaterial = [300, 351, 352, 353, 354, 355, 356, 357, 358, 359],
+				frameArrayMaterial = [84, 85, 96, 97],
+				innerFramesArrayMaterials = [301, 311, 372],
+				backLightsMainMaterils = [201, 215, 217],
+				backLightsDetalizationMaterils = [222, 293],
 				mainHeavyFrame = [312],
 				frontBumberArrayMaterial = [111, 116],
-				backBumberArrayMaterial = [118,128];
+				backBumberArrayMaterial = [118, 128];
 
 			bodyArrayMaterial.forEach(function(item) {
 				carGroup.children[item].material = bodyMaterial;
@@ -193,7 +223,7 @@ window.onload = function() {
 				carGroup.children[item].material = bodyMaterial;
 			});
 			spoilerMaterial.forEach(function(item) {
-				carGroup.children[item].material.opacity = 0;
+				carGroup.children[item].material = Invisible;
 			});
 			wheelsParts.forEach(function(item) {
 				carGroup.children[item].material = wheelsMaterial;
@@ -225,7 +255,6 @@ window.onload = function() {
 			backBumberArrayMaterial.forEach(function(item) {
 				carGroup.children[item].material = backBumperMaterial;
 			});
-
 			// Lamborgini logo
 			carGroup.children[154].material = materials['Yellow'];
 			carGroup.children[157].material = materials['Red'];
@@ -295,7 +324,7 @@ window.onload = function() {
 			// carGroup.children[415].material = materials['Green'];
 
 			// Inner car
-			 	// carGroup.children[408].material = materials['White'];
+			// carGroup.children[408].material = materials['White'];
 			// carGroup.children[409].material = materials['Green']; 
 
 			// glass
@@ -582,13 +611,24 @@ window.onload = function() {
 			// carGroup.children[375].material = materials['Red'];
 			// carGroup.children[398].material = materials['Green'];
 
-			carGroup.scale.x = carGroup.scale.y = carGroup.scale.z = 100;
+			// let geometry = new THREE.BoxGeometry(20, 20, 20);
+			// let material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
+			// let cube = new THREE.Mesh(geometry, material);
+			// cube.position.set(100, 20, 50);
+			// cube.castShadow = true;
+			// cube.receiveShadow = true;
+			// scene.add(cube);
+
+			carGroup.scale.x = carGroup.scale.y = carGroup.scale.z = 30;
+			carGroup.position.set(-40, 15, 0);
+			carGroup.castShadow = true;
+			carGroup.receiveShadow = true;
 			scene.add(carGroup);
 
 		});
 	}
 
-	
+
 	controls = new THREE.OrbitControls(camera);
 	// stats = new Stats();
 	// window.fps.appendChild(stats.dom);
