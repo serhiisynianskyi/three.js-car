@@ -168,7 +168,7 @@ window.onload = function() {
 					transparent: true,
 					// side: THREE.DoubleSide
 				});
-				carMesh.material = materials['Black metal'];
+				carMesh.material = materials['Chrome'];
 				carMesh.castShadow = true;
 				carMesh.receiveShadow = true;
 				carGroup.add(carMesh);
